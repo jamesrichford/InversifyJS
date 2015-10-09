@@ -1,30 +1,38 @@
+var plugins = [
+  'karma-coverage',
+  'karma-mocha',
+  'karma-chai',
+  'karma-sinon',
+  //'karma-chrome-launcher', // TODO: DEV only
+  'karma-phantomjs-launcher'
+];
+
+var browsers = [
+  //'Chrome', // TODO: DEV only
+  'PhantomJS'
+];
+
 module.exports = function (config) {
   'use strict';
 
-  var testFiles = __dirname + '/bundled/test/**/*.test.js',
-      coverageFolder = __dirname + '/coverage/';
-
   config.set({
       basePath: '',
+      singleRun: false,
       frameworks: ['mocha', 'chai', 'sinon'],
-      browsers: ['PhantomJS'],
+      browsers: browsers,
       reporters: ['progress', 'coverage'],
       coverageReporter: {
         type : 'lcov',
-        dir : coverageFolder,
+        dir : 'coverage/'
       },
-      plugins : [
-        'karma-coverage',
-        'karma-mocha',
-        'karma-chai',
-        'karma-sinon',
-        'karma-phantomjs-launcher'
-      ],
+      plugins : plugins,
       preprocessors: {
         '**/bundled/test/**/*.test.js' : 'coverage'
       },
       files : [
-        testFiles
+        { pattern: "node_modules/bluebird/js/browser/bluebird.min.js", included: true },
+        { pattern: "node_modules/reflect-metadata/Reflect.js", included: true },
+        { pattern: "bundled/test/**/*.test.js", included: true }
       ],
       port: 9876,
       colors: true,
