@@ -121,6 +121,7 @@ gulp.task("karma", function(cb) {
 });
 
 gulp.task("cover", function() {
+  if (!process.env.CI) return;
   return gulp.src("coverage/**/lcov.info")
       .pipe(coveralls());
 });
