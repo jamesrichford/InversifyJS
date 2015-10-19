@@ -5,11 +5,12 @@ interface IBinding<T> extends IBindingNamed<T>, IBindingWith<T>, IBindingWhen<T>
   runtimeIdentifier : string;
   implementationType : { new(): T ;};
   cache : T;
+  value : T;
   scope : number; // BindingScopeEnum
   resolveAs : number; // BindingResultEnum
   metadata : Array<IMetadata>;
   to(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
-  toValue(value : T) : IBindingNamed<T>;
+  toValue(value : T) : IBinding<T>;
   toConstructor(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
   toProvider(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
 }

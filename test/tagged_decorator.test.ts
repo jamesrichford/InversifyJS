@@ -1,11 +1,10 @@
-/* istanbul ignore next  */
-
 declare function __decorate(decorators, target, key?, desc?);
 declare function __param(paramIndex, decorator);
 
 ///<reference path="../typings/tsd.d.ts" />
 
 import { tagged } from "../source/decorators/tagged_decorator";
+import { decoratorUtils } from "../source/decorators/decorator_utils";
 var expect = chai.expect;
 
 interface IWeapon {}
@@ -165,6 +164,48 @@ describe("@tagged decorator \n", () => {
 
     var msg = "The @tagged and @named decorator must be applied to the parameters of a constructor.";
     expect(useDecoratorOnMethodThatIsNotAContructor).to.throw(msg);
+  });
+
+  it("It should be usable in VanillaJS applications. \n", () => {
+
+    var TaggedVanillaJSWarrior = (function () {
+        function TaggedVanillaJSWarrior(primary, secondary) {
+            // ...
+        }
+        return TaggedVanillaJSWarrior;
+    })();
+
+    var taggedVanillaJSWarrior = new TaggedVanillaJSWarrior("primary", "secondary");
+    expect(taggedVanillaJSWarrior).to.be.instanceof(TaggedVanillaJSWarrior);
+
+    decoratorUtils.decorate(tagged("power", 1), TaggedVanillaJSWarrior, 0);
+    decoratorUtils.decorate(tagged("power", 2), TaggedVanillaJSWarrior, 1);
+
+    var metadataKey = "inversify:tagged";
+    var paramsMetadata = Reflect.getMetadata(metadataKey, TaggedVanillaJSWarrior);
+    expect(paramsMetadata).to.be.an('object');
+
+    // assert metadata for first argument
+    expect(paramsMetadata["0"]).to.be.instanceof(Array);
+    var m1 : IMetadata = paramsMetadata["0"][0];
+    expect(m1.key).to.be.eql("power");
+    expect(m1.value).to.be.eql(1);
+
+    // argumnet at index 0 should only have one tag
+    expect(paramsMetadata["0"][1]).to.be.undefined;
+
+    // assert metadata for second argument
+    expect(paramsMetadata["1"]).to.be.instanceof(Array);
+    var m2 : IMetadata = paramsMetadata["1"][0];
+    expect(m2.key).to.be.eql("power");
+    expect(m2.value).to.be.eql(2);
+
+    // argumnet at index 1 should only have one tag
+    expect(paramsMetadata["1"][1]).to.be.undefined;
+
+    // no more metadata should be available
+    expect(paramsMetadata["2"]).to.be.undefined;
+
   });
 
 });

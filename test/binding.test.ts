@@ -2,6 +2,7 @@
 
 import { Binding } from "../source/binding/binding";
 import { BindingScopeEnum } from "../source/binding/binding_scope_enum";
+import { BindingResultEnum } from "../source/binding/binding_result_enum";
 var expect = chai.expect;
 
 interface FooInterface {
@@ -76,6 +77,17 @@ describe("Binding class \n", () => {
     var binding =  new Binding<FooInterface>(runtimeIdentifier).to(Foo);
     var instance = new binding.implementationType();
     expect(instance.greet()).to.equals("foo");
+    expect(binding.resolveAs).to.equals(BindingResultEnum.Instance);
+  });
+
+  it("It should be able to bind to a value \n", () => {
+    var runtimeIdentifier = "FooInterface";
+    // using any to be able to test
+    var val = new Foo();
+    var binding : any =  new Binding<FooInterface>(runtimeIdentifier).toValue(val);
+    expect(binding.implementationType).to.be.undefined;
+    expect(binding.value).to.eql(val);
+    expect(binding.resolveAs).to.equals(BindingResultEnum.Value);
   });
 
 });

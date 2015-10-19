@@ -1,5 +1,3 @@
-/* istanbul ignore next  */
-
 declare function __decorate(decorators, target, key?, desc?);
 declare function __param(paramIndex, decorator);
 
@@ -206,17 +204,23 @@ describe("@inject decorator \n", () => {
 
   it("It should be usable in VanillaJS applications. \n", () => {
 
-    var VanillaJSWarrior = (function () {
-        function VanillaJSWarrior(primary, secondary) {
+    var VanillaJSWarriorWithInjections = (function () {
+        function VanillaJSWarriorWithInjections(primary, secondary) {
             // ...
         }
-        return VanillaJSWarrior;
+        return VanillaJSWarriorWithInjections;
     })();
 
-    VanillaJSWarrior = decoratorUtils.decorate(inject("IKatana","IShuriken"), VanillaJSWarrior);
+    var vanillaJSWarriorWithInjections = new VanillaJSWarriorWithInjections("primary", "secondary");
+    expect(vanillaJSWarriorWithInjections).to.be.instanceof(VanillaJSWarriorWithInjections);
+
+    VanillaJSWarriorWithInjections = decoratorUtils.decorate(
+      inject("IKatana","IShuriken"),
+      VanillaJSWarriorWithInjections
+    );
 
     var metadataKey = "inversify:inject";
-    var paramsMetadata = Reflect.getMetadata(metadataKey, VanillaJSWarrior);
+    var paramsMetadata = Reflect.getMetadata(metadataKey, VanillaJSWarriorWithInjections);
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
@@ -230,6 +234,91 @@ describe("@inject decorator \n", () => {
     expect(target2.name).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(0);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+  it("It should generate metadata for named bindings \n", () => {
+
+
+
+
+    var metadataKey = "inversify:inject";
+    var paramsMetadata = Reflect.getMetadata(metadataKey, NamedWarrior);
+    expect(paramsMetadata).to.be.instanceof(Array);
+
+    var target1 : ITarget = paramsMetadata[0];
+    expect(target1.type).to.be.eql("IKatana");
+    expect(target1.name).to.be.eql("primary");
+    expect(target1.metadata).to.be.instanceof(Array);
+    expect(target1.metadata.length).to.be.eql(1);
+    expect(target1.metadata[0].key).to.be.eql("named");
+    expect(target1.metadata[0].value).to.be.eql("strong");
+
+    var target2 : ITarget = paramsMetadata[1];
+    expect(target2.type).to.be.eql("IShuriken");
+    expect(target2.name).to.be.eql("secondary");
+    expect(target2.metadata).to.be.instanceof(Array);
+    expect(target2.metadata.length).to.be.eql(1);
+    expect(target2.metadata[0].key).to.be.eql("named");
+    expect(target2.metadata[0].value).to.be.eql("weak");
+
+    expect(paramsMetadata[2]).to.be.undefined;
+    expect(target1.metadata[2]).to.be.undefined;
+    expect(target2.metadata[2]).to.be.undefined;
+  });
+
+  it("It should generate metadata for tagged bindings \n", () => {
+
+    var VanillaJSWarrior = (function () {
+        function VanillaJSWarrior(primary, secondary) {
+            // ...
+        }
+        return VanillaJSWarrior;
+    })();
+
+    var vanillaJSWarriorWithInjections = new VanillaJSWarrior("primary", "secondary");
+    expect(vanillaJSWarriorWithInjections).to.be.instanceof(VanillaJSWarrior);
+
+
+
+    VanillaJSWarrior = decoratorUtils.decorate(
+      inject("IKatana","IShuriken"),
+      VanillaJSWarrior
+    );
+
+    var metadataKey = "inversify:inject";
+    var paramsMetadata = Reflect.getMetadata(metadataKey, TaggedWarrior);
+    expect(paramsMetadata).to.be.instanceof(Array);
+
+    var target1 : ITarget = paramsMetadata[0];
+    expect(target1.type).to.be.eql("IKatana");
+    expect(target1.name).to.be.eql("primary");
+    expect(target1.metadata).to.be.instanceof(Array);
+    expect(target1.metadata.length).to.be.eql(1);
+    expect(target1.metadata[0].key).to.be.eql("power");
+    expect(target1.metadata[0].value).to.be.eql(5);
+
+    var target2 : ITarget = paramsMetadata[1];
+    expect(target2.type).to.be.eql("IShuriken");
+    expect(target2.name).to.be.eql("secondary");
+    expect(target2.metadata).to.be.instanceof(Array);
+    expect(target2.metadata.length).to.be.eql(1);
+    expect(target2.metadata[0].key).to.be.eql("power");
+    expect(target2.metadata[0].value).to.be.eql(1);
+
+    expect(paramsMetadata[2]).to.be.undefined;
+    expect(target1.metadata[2]).to.be.undefined;
+    expect(target2.metadata[2]).to.be.undefined;
   });
 
 });

@@ -21,9 +21,8 @@ class DecoratorUtils implements IDecoratorUtils {
     // If using ES6 classes and there is no constructor
     // there is no need to parser constructor args
     if('function' === typeof Map &&
-       fnStr.indexOf("class") !== -1 &&
-       fnStr.indexOf("constructor") === -1) {
-
+      fnStr.indexOf("class") !== -1 &&
+      fnStr.indexOf("constructor") === -1) {
       result = null;
     }
     else {
@@ -84,14 +83,11 @@ class DecoratorUtils implements IDecoratorUtils {
   }
 
   private _decorate(decorators, target) {
-      if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target);
-      switch (arguments.length) {
-          case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
-      }
+    Reflect.decorate(decorators, target);
   }
 
   private _param(paramIndex, decorator) {
-      return function (target, key) { decorator(target, key, paramIndex); }
+    return function (target, key) { decorator(target, key, paramIndex); }
   }
 
   // Allows VanillaJS developers to use decorators
@@ -104,7 +100,7 @@ class DecoratorUtils implements IDecoratorUtils {
     parameterIndex?: number) : any {
 
       if(typeof parameterIndex === "number") {
-        return this._decorate([this._param(0, decorator)], target);
+        return this._decorate([this._param(parameterIndex, decorator)], target);
       }
       else {
         return this._decorate([decorator], target);

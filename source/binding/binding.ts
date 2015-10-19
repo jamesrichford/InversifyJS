@@ -22,6 +22,9 @@ class Binding<T> implements IBinding<T> {
     // Cache used to allow singleton scope
     public cache : T;
 
+    // Used for toValue
+    public value : T;
+
     // The scope mode to be used
     public scope : BindingScopeEnum;
 
@@ -57,8 +60,8 @@ class Binding<T> implements IBinding<T> {
     }
 
     // Indicates that the service should be bound to the specified constant value.
-    public toValue(value : T) : IBindingNamed<T> {
-      this.cache = value;
+    public toValue(value : T) : IBinding<T> {
+      this.value = value;
       this.resolveAs = BindingResultEnum.Value;
       return this;
     }
