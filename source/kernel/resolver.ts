@@ -1,32 +1,16 @@
 ///<reference path="../interfaces.d.ts" />
 
 import { BindingScopeEnum } from "../binding/binding_scope_enum";
+import { decoratorUtils } from "../decorators/decorator_utils";
 import { Target } from "../activation/target";
 
-class BindingResolver implements IBindingResolver {
+class Resolver implements IBindingResolver {
 
   // Take a function as argument and discovers
   // the names of its arguments at run-time
   // used to validate that metadata ("inversify:inject") has valid length
   public hasDependencies(func : Function) : boolean {
-
-    var fnStr, argsInit, argsEnd, result, STRIP_COMMENTS, ARGUMENT_NAMES;
-
-    // Regular expresions used to get a list containing
-    // the names of the arguments of a function
-    STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-    ARGUMENT_NAMES = /([^\s,]+)/g;
-
-    fnStr = func.toString().replace(STRIP_COMMENTS, '');
-    argsInit = fnStr.indexOf('(') + 1;
-    argsEnd = fnStr.indexOf(')');
-    result = fnStr.slice(argsInit, argsEnd).match(ARGUMENT_NAMES);
-
-    if(result === null) {
-      result = []
-    }
-
-    return !(result.length === 0);
+    return (decoratorUtils.getParanNames(func).length !== 0);
   }
 
   public getMetadata(target) : Array<ITarget> {
@@ -58,18 +42,11 @@ class BindingResolver implements IBindingResolver {
       }
   }
 
-  // Use of .apply() with 'new' operator. Can call any constructor (except native
-  // constructors that behave differently when called  as functions, like String,
-  // Number, Date, etc.) with an array of arguments
+  // Creates instances of objects
   public construct<TImplementationType>(
     constr : { new(): TImplementationType ;}, args : Object[]) : TImplementationType {
 
-    function F() : void {
-      constr.apply(this, args);
-    }
-
-    F.prototype = constr.prototype;
-    return new F();
+      return new (Function.prototype.bind.apply(constr, [null].concat(args)));
   }
 
   public get<TImplementationType>(bindingDictionary : ILookup<IBinding<any>>, target : ITarget) : TImplementationType {
@@ -117,4 +94,4 @@ class BindingResolver implements IBindingResolver {
   }
 }
 
-export { BindingResolver };
+export { Resolver };

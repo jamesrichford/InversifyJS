@@ -91,29 +91,20 @@ gulp.task("bundle-source", function () {
     .pipe(gulp.dest("bundled/source/"));
 });
 
-gulp.task("bundle-test", function (done) {
-  fs.readdir("build/test/", function(err, testFiles) {
+gulp.task("bundle-test", function () {
 
-    if(err) throw new Error("Cannot read test files");
+  var file = "all.test.js";
 
-    for(var i = 0; i < testFiles.length; i++) {
-
-      var file = testFiles[i];
-
-      (function(f) {
-        var b = browserify({
-          entries: "build/test/" + file,
-          debug: true
-        });
-
-        return b.bundle()
-          .pipe(source(file))
-          .pipe(buffer())
-          .pipe(gulp.dest("bundled/test/"));
-      })(file);
-    }
-    done();
+  var b = browserify({
+    entries: "build/test/" + file,
+    debug: true
   });
+
+  return b.bundle()
+    .pipe(source(file))
+    .pipe(buffer())
+    .pipe(gulp.dest("bundled/test/"));
+
 });
 
 gulp.task("bundle", function(cb) {
@@ -125,8 +116,7 @@ gulp.task("bundle", function(cb) {
 //******************************************************************************
 gulp.task("karma", function(cb) {
   new Server({
-      configFile: __dirname + '/karma.conf.js',
-      singleRun: true
+      configFile: __dirname + '/karma.conf.js'
     }, cb).start();
 });
 

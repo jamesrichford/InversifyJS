@@ -11,4 +11,8 @@ import { inject } from "./decorators/inject_decorator";
 import { named } from "./decorators/named_decorator";
 import { tagged } from "./decorators/tagged_decorator";
 
-export { Kernel, Binding, inject, named, tagged };
+export { Kernel };
+export { Binding };
+export { inject };
+export { named };
+export { tagged };

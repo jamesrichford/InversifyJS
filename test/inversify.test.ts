@@ -2,8 +2,16 @@
 
 import { Kernel, Binding, inject, named, tagged } from "../source/inversify";
 
-describe("Target class \n", () => {
+var expect = chai.expect;
 
-  it("It should be able to create instances of untagged tagets \n", () => {
-    
+describe("Inversify root module \n", () => {
+
+  it("It should be able to acess roor module contents \n", () => {
+    expect(typeof Kernel).eql("function");
+    expect(typeof Binding).eql("function");
+    expect(typeof inject).eql("function");
+    expect(typeof named).eql("function");
+    expect(typeof tagged).eql("function");
+  });
+
 });

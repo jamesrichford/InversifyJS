@@ -1,0 +1,9 @@
+import "./inversify.test";
+import "./inject_decorator.test";
+import "./named_decorator.test";
+import "./tagged_decorator.test";
+import "./kernel.test";
+import "./lookup.test";
+import "./binding.test";
+import "./target.test";
+import "./metadata.test";

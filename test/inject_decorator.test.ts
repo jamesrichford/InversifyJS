@@ -8,6 +8,7 @@ declare function __param(paramIndex, decorator);
 import { inject } from "../source/decorators/inject_decorator";
 import { named } from "../source/decorators/named_decorator";
 import { tagged } from "../source/decorators/tagged_decorator";
+import { decoratorUtils } from "../source/decorators/decorator_utils";
 var expect = chai.expect;
 
 interface IWeapon {}
@@ -201,6 +202,34 @@ describe("@inject decorator \n", () => {
 
     var msg = "The number of types to be injected do not match the number of constructor arguments.";
     expect(forgotToDeclareInjection).to.throw(msg);
+  });
+
+  it("It should be usable in VanillaJS applications. \n", () => {
+
+    var VanillaJSWarrior = (function () {
+        function VanillaJSWarrior(primary, secondary) {
+            // ...
+        }
+        return VanillaJSWarrior;
+    })();
+
+    VanillaJSWarrior = decoratorUtils.decorate(inject("IKatana","IShuriken"), VanillaJSWarrior);
+
+    var metadataKey = "inversify:inject";
+    var paramsMetadata = Reflect.getMetadata(metadataKey, VanillaJSWarrior);
+    expect(paramsMetadata).to.be.instanceof(Array);
+
+    var target1 : ITarget = paramsMetadata[0];
+    expect(target1.type).to.be.eql("IKatana");
+    expect(target1.name).to.be.eql("primary");
+    expect(target1.metadata).to.be.instanceof(Array);
+    expect(target1.metadata.length).to.be.eql(0);
+
+    var target2 : ITarget = paramsMetadata[1];
+    expect(target2.type).to.be.eql("IShuriken");
+    expect(target2.name).to.be.eql("secondary");
+    expect(target2.metadata).to.be.instanceof(Array);
+    expect(target2.metadata.length).to.be.eql(0);
   });
 
 });

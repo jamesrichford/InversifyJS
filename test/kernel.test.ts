@@ -1,5 +1,37 @@
 ///<reference path="../typings/tsd.d.ts" />
 
+declare var Map;
+
+// Polyfill for Function.prototype.bind more details at
+// https://github.com/ariya/phantomjs/issues/10522
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    if (this.prototype) {
+      // native functions don't have a prototype
+      fNOP.prototype = this.prototype;
+    }
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
 import { Kernel } from "../source/kernel/kernel";
 import { Binding } from "../source/binding/binding";
 import { BindingScopeEnum } from "../source/binding/binding_scope_enum";
@@ -170,6 +202,40 @@ describe('Kernel Test Suite \n', () => {
     }
 
     expect(fn).to.throw(`Could not resolve service ${fooRuntimeIdentifier}`);
+  });
+
+  it('Not try to find constructor arguments when ES6 and no constructor \n', () => {
+    // MORE INFO at https://github.com/inversify/InversifyJS/issues/23
+
+    // using any to access private members
+    var kernel : any = new Kernel();
+    var binding : any = Binding;
+
+    var A = function(){};
+    A.toString = function() { return "class A {\n}"; }
+
+    var B = function(){};
+    B.toString = function() { return "class B {\n constructor(a) {\n }\n}"; }
+
+    kernel.bind(new binding('a', A));
+    kernel.bind(new binding('b', B));
+
+    // trigger ES6 detection (TODO run tests on real --harmony enviroment)
+    Map = function() { };
+
+    // using any to access private members
+    var args1 = kernel._getConstructorArguments(A);
+    expect(args1).to.be.instanceof(Array);
+    expect(args1.length).to.equal(0);
+
+    var args2 = kernel._getConstructorArguments(B);
+    expect(args2).to.be.instanceof(Array);
+    expect(args2.length).to.equal(1);
+    expect(args2[0]).to.be.a('string');
+    expect(args2[0]).to.equal("a");
+
+    // roll back ES6 detection
+    Map = undefined;
   });
 
 });

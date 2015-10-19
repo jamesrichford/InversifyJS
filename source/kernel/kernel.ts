@@ -18,11 +18,11 @@
 import { BindingScopeEnum } from "../binding/binding_scope_enum";
 import { Lookup } from "./lookup";
 import { Target } from "../activation/target";
-import { BindingResolver } from "./binding_resolver";
+import { Resolver } from "./resolver";
 
 class Kernel implements IKernel {
 
-  private _bindingResolver : IBindingResolver;
+  private _resolver : IBindingResolver;
 
   // The objet properties are used as unique keys type
   // bindings are used as values
@@ -31,7 +31,7 @@ class Kernel implements IKernel {
   // The class default constructor
   constructor() {
     this._bindingDictionary = new Lookup<IBinding<any>>();
-    this._bindingResolver = new BindingResolver();
+    this._resolver = new Resolver();
   }
 
   // Regiters a type binding
@@ -74,7 +74,7 @@ class Kernel implements IKernel {
 
   // Resolves a dependency by target
   private _resolve<TImplementationType>(target : ITarget) : TImplementationType {
-    return this._bindingResolver.get<TImplementationType>(this._bindingDictionary, target);
+    return this._resolver.get<TImplementationType>(this._bindingDictionary, target);
   }
 }
 

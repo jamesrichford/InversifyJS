@@ -108,4 +108,6 @@ interface IBindingResolver {
 
 interface IDecoratorUtils {
   tagParameter(target: any, targetKey : string, index : number, metadata : IMetadata);
+  decorate(decorator : (ClassDecorator|ParameterDecorator), target : any, parameterIndex?: number) : any;
+  getParanNames(func : Function) : string[];
 }
