@@ -2,7 +2,8 @@ enum BindingResultEnum {
   Instance,
   Value,
   Constructor,
-  Provider
+  Factory,
+  Promise
 }
 
 export { BindingResultEnum };

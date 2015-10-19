@@ -11,9 +11,11 @@ import "./tagged_decorator.test";
 // binding
 import "./binding.test";
 
-// target
+// activation
 import "./target.test";
 import "./metadata.test";
+import "./context.test";
+import "./request.test";
 
 // root
 import "./inversify.test";

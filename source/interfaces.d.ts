@@ -12,7 +12,8 @@ interface IBinding<T> extends IBindingNamed<T>, IBindingWith<T>, IBindingWhen<T>
   to(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
   toValue(value : T) : IBinding<T>;
   toConstructor(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
-  toProvider(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;
+  toFactory(implementationType : { new(...args : any[]): T ;}) : IBinding<T>;  // Callback
+  toPromise(implementationType : { new(...args : any[]): T ;}) : IBinding<T>; // Promise
 }
 
 interface IBindingNamed<T> {

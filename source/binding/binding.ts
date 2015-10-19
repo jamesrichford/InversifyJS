@@ -75,9 +75,16 @@ class Binding<T> implements IBinding<T> {
 
     // Indicates that the service should be bound to an instance of the specified provider type.
     // The instance will be activated via the kernel when an instance of the service is activated.
-    public toProvider(implementationType : { new(...args : any[]): T ;}) : IBinding<T> {
+    public toFactory(implementationType : { new(...args : any[]): T ;}) : IBinding<T> {
       this.implementationType = implementationType;
-      this.resolveAs = BindingResultEnum.Provider;
+      this.resolveAs = BindingResultEnum.Factory;
+      return this;
+    }
+
+    // Indicates that the service should be bound to an instance of the specified Promise type.
+    public toPromise(implementationType : { new(...args : any[]): T ;}) : IBinding<T> {
+      this.implementationType = implementationType;
+      this.resolveAs = BindingResultEnum.Promise;
       return this;
     }
 

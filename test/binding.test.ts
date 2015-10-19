@@ -90,4 +90,64 @@ describe("Binding class \n", () => {
     expect(binding.resolveAs).to.equals(BindingResultEnum.Value);
   });
 
+  it("It should be able to bind to a constructor \n", () => {
+    // TODO Binding.prototype.toConstructor
+  });
+
+  it("It should be able to bind to a factory \n", () => {
+    // TODO Binding.prototype.toFactory
+  });
+
+  it("It should be able to bind to a promise \n", () => {
+    // TODO Binding.prototype.toPromise
+  });
+
+  it("It should be able to be named \n", () => {
+    // TODO Binding.prototype.named
+  });
+
+  it("It should be able to have metadata \n", () => {
+    // TODO Binding.prototype.withMetadata
+  });
+
+  it("It should be able to have a constructor arguments constraint \n", () => {
+    // TODO Binding.prototype.withConstructorArgument
+  });
+
+  it("It should be able to have a property value constraint \n", () => {
+    // TODO Binding.prototype.withPropertyValue
+  });
+
+  it("It should be able to have a parameter constraint \n", () => {
+    // TODO Binding.prototype.withParameter
+  });
+
+  it("It should be able to have custom constraint \n", () => {
+    // TODO Binding.prototype.when
+  });
+
+  it("It should be able to have injection constraint \n", () => {
+    // TODO Binding.prototype.whenInjectedInto
+  });
+
+  it("It should be able to have precise injection constraint \n", () => {
+    // TODO Binding.prototype.whenInjectedExactlyInto
+  });
+
+  // Binding.prototype.whenParentNamed
+  // Binding.prototype.whenAnyAnchestorNamed
+  // Binding.prototype.whenNoAnchestorNamed
+  // Binding.prototype.whenAnyAnchestorMatches
+  // Binding.prototype.whenNoAnchestorMatches
+  // Binding.prototype.onActivation
+  // Binding.prototype.onDeactivation
+
+  it("It should be able to use transient scope \n", () => {
+    // TODO Binding.prototype.inTransientScope
+  });
+
+  it("It should be able to use singleton scope \n", () => {
+    // TODO Binding.prototype.inSingletonScope
+  });
+
 });
