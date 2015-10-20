@@ -76,7 +76,7 @@ interface IMetadata {
 
 interface IContext {
   kernel : IKernel;
-  request : IRequest;
+  requests : IRequest[];
 }
 
 interface IRequest {
@@ -93,6 +93,10 @@ interface ITarget {
   isTagged() : boolean;
   matchesName(name : string) : boolean;
   matchesTag(name : IMetadata) : boolean;
+}
+
+interface IActivationUtils {
+  guid() : string;
 }
 
 interface IBindingResolver {

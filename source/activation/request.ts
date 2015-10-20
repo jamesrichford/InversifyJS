@@ -1,13 +1,32 @@
 ///<reference path="../interfaces.d.ts" />
 
-class Request implements IRequest {
-  public context : IContext;
-  public parentRequest : IRequest;
+import { activationUtils } from "./activation_utils";
 
-  constructor(context : IContext, parentRequest? : IRequest) {
-	  this.context = context;
-	  this.parentRequest = parentRequest || null;
+class Request implements IRequest {
+
+  public guid : string;
+  public injectedInto : string;
+  public context : IContext;
+  public targets : ITarget[];
+
+  constructor(injectedInto : string, context : IContext, targets : ITarget[]) {
+    this.guid = activationUtils.guid();
+    this.context = context;
+    this.targets = [];
   }
+
+  public getParentRequest() {
+    this.context.getPreviousRequest(this.guid);
+  }
+
+  public getChildRequest() {
+    this.context.getNextRequest(this.guid);
+  }
+
+  public getIndex() {
+   this.context.getRequestIndex(this.guid);
+  }
+
 }
 
 export { Request };

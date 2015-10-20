@@ -134,13 +134,33 @@ describe("Binding class \n", () => {
     // TODO Binding.prototype.whenInjectedExactlyInto
   });
 
-  // Binding.prototype.whenParentNamed
-  // Binding.prototype.whenAnyAnchestorNamed
-  // Binding.prototype.whenNoAnchestorNamed
-  // Binding.prototype.whenAnyAnchestorMatches
-  // Binding.prototype.whenNoAnchestorMatches
-  // Binding.prototype.onActivation
-  // Binding.prototype.onDeactivation
+  it("It should be able to have parameter name constraint \n", () => {
+    // TODO Binding.prototype.whenInjectedExactlyInto
+  });
+
+  it("It should be able to have anchestor name constraint \n", () => {
+    // TODO Binding.prototype.whenAnyAnchestorNamed
+  });
+
+  it("It should be able to have negative anchestor name constraint \n", () => {
+    // TODO Binding.prototype.whenNoAnchestorNamed
+  });
+
+  it("It should be able to match anchestor name constraint \n", () => {
+    // TODO Binding.prototype.whenAnyAnchestorMatches
+  });
+
+  it("It should be able to match negative anchestor name constraint \n", () => {
+    // TODO Binding.prototype.whenNoAnchestorMatches
+  });
+
+  it("It should be able to have an activation handler \n", () => {
+    // TODO Binding.prototype.onActivation
+  });
+
+  it("It should be able to have a deactivation handler \n", () => {
+    // TODO Binding.prototype.onDeactivation
+  });
 
   it("It should be able to use transient scope \n", () => {
     // TODO Binding.prototype.inTransientScope
