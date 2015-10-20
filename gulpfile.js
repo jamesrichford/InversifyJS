@@ -10,10 +10,11 @@ var gulp        = require("gulp"),
     buffer      = require("vinyl-buffer"),
     tslint      = require("gulp-tslint"),
     tsc         = require("gulp-typescript"),
+    rename      = require("gulp-rename"),
     Server      = require("karma").Server,
     coveralls   = require('gulp-coveralls'),
     uglify      = require("gulp-uglify"),
-    docco       = require("gulp-docco"),
+    typedoc     = require("gulp-typedoc"),
     runSequence = require("run-sequence"),
     header      = require("gulp-header");
 
@@ -30,16 +31,39 @@ gulp.task("lint", function() {
 });
 
 //******************************************************************************
+//* DOCUMENT
+//******************************************************************************
+gulp.task("document", function () {
+  return gulp.src("source/inversify.ts")
+             .pipe(typedoc({
+                target : "ES5",
+                module : "commonjs",
+                includeDeclarations: false,
+                out: "./docs",
+                name: "InversifyJS",
+                version: true,
+             }));
+});
+
+//******************************************************************************
 //* BUILD
 //******************************************************************************
 var tsProject = tsc.createProject({
-  removeComments : false,
+  removeComments : true,
   noImplicitAny : false,
   target : "ES5",
   module : "commonjs",
   declarationFiles : false,
   experimentalDecorators : true
 });
+
+var config = {
+    app: {
+        path: __dirname + '/source',
+        main: 'inversify.ts',
+        result: 'inversify.js'
+    }
+};
 
 gulp.task("build-source", function() {
   return gulp.src("source/**/**.ts")
@@ -48,7 +72,7 @@ gulp.task("build-source", function() {
 });
 
 var tsTestProject = tsc.createProject({
-  removeComments : false,
+  removeComments : true,
   noImplicitAny : false,
   target : "ES5",
   module : "commonjs",
@@ -62,27 +86,13 @@ gulp.task("build-test", function() {
              .js.pipe(gulp.dest("build/test/"));
 });
 
-gulp.task("build", function(cb) {
-  runSequence("lint", "build-source", "build-test", cb);
-});
-
-//******************************************************************************
-//* DOCUMENT
-//******************************************************************************
-gulp.task("document", function () {
-  return gulp.src("build/source/*.js")
-             .pipe(docco())
-             .pipe(gulp.dest("documentation"));
-});
-
 //******************************************************************************
 //* BUNDLE
 //******************************************************************************
 gulp.task("bundle-source", function () {
   var b = browserify({
     standalone : 'inversify',
-    entries: "build/source/inversify.js",
-    debug: true
+    entries: "build/source/inversify.js"
   });
 
   return b.bundle()
@@ -96,8 +106,7 @@ gulp.task("bundle-test", function () {
   var file = "all.test.js";
 
   var b = browserify({
-    entries: "build/test/" + file,
-    debug: true
+    entries: "build/test/" + file
   });
 
   return b.bundle()
@@ -105,10 +114,6 @@ gulp.task("bundle-test", function () {
     .pipe(buffer())
     .pipe(gulp.dest("bundled/test/"));
 
-});
-
-gulp.task("bundle", function(cb) {
-  runSequence("build", "bundle-source", "bundle-test", "document", cb);
 });
 
 //******************************************************************************
@@ -126,22 +131,19 @@ gulp.task("cover", function() {
       .pipe(coveralls());
 });
 
-gulp.task("test", function(cb) {
-  runSequence("bundle", "karma", "cover", cb);
-});
-
 //******************************************************************************
 //* BAKE
 //******************************************************************************
 gulp.task("compress", function() {
   return gulp.src("bundled/source/inversify.js")
              .pipe(uglify({ preserveComments : false }))
-             .pipe(gulp.dest(__dirname + "/dist/"))
+             .pipe(rename('inversify.min.js'))
+             .pipe(gulp.dest("dist/"));
 });
 
 gulp.task("header", function() {
 
-  var pkg = require("package.json");
+  var pkg = require("./package.json");
 
   var banner = ["/**",
     " * <%= pkg.name %> v.<%= pkg.version %> - <%= pkg.description %>",
@@ -151,13 +153,13 @@ gulp.task("header", function() {
     " */",
     ""].join("\n");
 
-  return gulp.src("dist/inversify.js")
+  gulp.src("bundled/source/inversify.js")
              .pipe(header(banner, { pkg : pkg } ))
              .pipe(gulp.dest("dist/"));
-});
 
-gulp.task("bake", function(cb) {
-  runSequence("bundle", "compress", "header", cb);
+  return gulp.src("dist/inversify.min.js")
+             .pipe(header(banner, { pkg : pkg } ))
+             .pipe(gulp.dest("dist/"));
 });
 
 //******************************************************************************
@@ -170,10 +172,10 @@ gulp.task("default", function (cb) {
     "build-test",
     "bundle-source",
     "bundle-test",
-    "document",
     "karma",
     "cover",
     "compress",
     "header",
+    "document",
     cb);
 });

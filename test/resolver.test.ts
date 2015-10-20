@@ -3,10 +3,10 @@
 import { Resolver } from "../source/kernel/resolver";
 var expect = chai.expect;
 
-describe('Kernel Test Suite \n', () => {
+describe('Resolver Test Suite \n', () => {
 
   it('It should be able to ... \n', () => {
-    
+    // TODO
   });
 
 });
