@@ -75,18 +75,22 @@ interface IMetadata {
 }
 
 interface IContext {
+  guid : string;
   kernel : IKernel;
-  requests : IRequest[];
+  rootRequest : IRequest;
 }
 
 interface IRequest {
+  guid : string;
+  index : number;
+  injectedInto : IQueryableString;
   context : IContext;
-  parentRequest : IRequest;
+  target : ITarget;
 }
 
 interface ITarget {
-  type : string;
-  name : string;
+  service : IQueryableString;
+  name : IQueryableString;
   metadata : Array<IMetadata>;
   isArray() : boolean;
   isNamed() : boolean;
@@ -116,4 +120,12 @@ interface IDecoratorUtils {
   tagParameter(target: any, targetKey : string, index : number, metadata : IMetadata);
   decorate(decorator : (ClassDecorator|ParameterDecorator), target : any, parameterIndex?: number) : any;
   getParanNames(func : Function) : string[];
+}
+
+interface IQueryableString {
+  startsWith(searchString : string, position? : number) : boolean;
+  endsWith(searchString : string, position? : number) : boolean;
+  contains(searchString : string) : boolean;
+  equals(compareString : string) : boolean;
+  value() : string;
 }

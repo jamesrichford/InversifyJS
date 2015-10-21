@@ -16,6 +16,8 @@ import "./target.test";
 import "./metadata.test";
 import "./context.test";
 import "./request.test";
+import "./queryable_string.test";
+import "./activation_utils.test";
 
 // root
 import "./inversify.test";

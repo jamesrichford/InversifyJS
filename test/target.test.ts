@@ -8,16 +8,16 @@ describe("Target class \n", () => {
 
   it("It should be able to create instances of untagged tagets \n", () => {
     var target = new Target("katana", "IKatana");
-    expect(target.type).to.be.eql("IKatana");
-    expect(target.name).to.be.eql("katana");
+    expect(target.service.value()).to.be.eql("IKatana");
+    expect(target.name.value()).to.be.eql("katana");
     expect(Array.isArray(target.metadata)).to.be.eql(true);
     expect(target.metadata.length).to.be.eql(0);
   });
 
   it("It should be able to create instances of named tagets \n", () => {
     var target = new Target("katana", "IKatana", "primary");
-    expect(target.type).to.be.eql("IKatana");
-    expect(target.name).to.be.eql("katana");
+    expect(target.service.value()).to.be.eql("IKatana");
+    expect(target.name.value()).to.be.eql("katana");
     expect(Array.isArray(target.metadata)).to.be.eql(true);
     expect(target.metadata.length).to.be.eql(1);
     expect(target.metadata[0].key).to.be.eql("named");
@@ -26,8 +26,8 @@ describe("Target class \n", () => {
 
   it("It should be able to create instances of tagged tagets \n", () => {
     var target = new Target("katana", "IKatana", new Metadata("power", 5));
-    expect(target.type).to.be.eql("IKatana");
-    expect(target.name).to.be.eql("katana");
+    expect(target.service.value()).to.be.eql("IKatana");
+    expect(target.name.value()).to.be.eql("katana");
     expect(Array.isArray(target.metadata)).to.be.eql(true);
     expect(target.metadata.length).to.be.eql(1);
     expect(target.metadata[0].key).to.be.eql("power");

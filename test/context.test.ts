@@ -9,14 +9,11 @@ describe('Context Test Suite \n', () => {
 
   it('It should be able to set its own properties correctly \n', () => {
     var kernel = new Kernel();
-    var request1 = new Request();
-    var request2 = new Request();
-    var context =  new Context(kernel, [request1, request2]);
+    var context =  new Context(kernel);
+    var request = new Request(context);
+    context.rootRequest = request;
     expect(context.kernel).to.equals(kernel);
-    expect(context.requests).to.be.instanceof(Array);
-    expect(context.requests[0].key).to.be.eql(request1);
-    expect(context.requests[1].key).to.be.eql(request2);
-    expect(context.requests[2]).to.be.undefined;
+    expect(context.rootRequest).to.be.eql(request);
   });
 
 });

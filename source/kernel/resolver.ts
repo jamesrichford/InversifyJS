@@ -52,8 +52,8 @@ class Resolver implements IBindingResolver {
   public get<TImplementationType>(bindingDictionary : ILookup<IBinding<any>>, target : ITarget) : TImplementationType {
     var bindings : IBinding<TImplementationType>[];
 
-    if(bindingDictionary.hasKey(target.type)) {
-      bindings = bindingDictionary.get(target.type);
+    if(bindingDictionary.hasKey(target.service.value())) {
+      bindings = bindingDictionary.get(target.service.value());
     }
     else {
       // no bindings available

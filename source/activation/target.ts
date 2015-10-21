@@ -1,15 +1,18 @@
 ///<reference path="../interfaces.d.ts" />
 
 import { Metadata } from "./metadata";
+import { QueryableString } from "./queryable_string";
 
 class Target implements ITarget {
-  public type : string;
-  public name : string;
+
+  public service : QueryableString;
+  public name : QueryableString;
   public metadata : Array<IMetadata>;
 
-  constructor(name: string, type : string, namedOrTagged? : (string|IMetadata)) {
-    this.name = name;
-    this.type = type;
+  constructor(name: string, service : string, namedOrTagged? : (string|IMetadata)) {
+
+    this.name = new QueryableString(name);
+    this.service = new QueryableString(service);
     this.metadata = new Array<IMetadata>();
     var metadataItem : IMetadata = null;
 
@@ -30,7 +33,7 @@ class Target implements ITarget {
   }
 
   public isArray() : boolean {
-	  return (this.type.indexOf("[]") != -1);
+	  return (this.service.value().indexOf("[]") != -1);
   }
 
   public isNamed() : boolean {

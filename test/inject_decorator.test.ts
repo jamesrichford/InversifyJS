@@ -113,14 +113,14 @@ describe("@inject decorator \n", () => {
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(0);
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(0);
   });
@@ -131,16 +131,16 @@ describe("@inject decorator \n", () => {
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(1);
     expect(target1.metadata[0].key).to.be.eql("named");
     expect(target1.metadata[0].value).to.be.eql("strong");
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(1);
     expect(target2.metadata[0].key).to.be.eql("named");
@@ -157,16 +157,16 @@ describe("@inject decorator \n", () => {
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(1);
     expect(target1.metadata[0].key).to.be.eql("power");
     expect(target1.metadata[0].value).to.be.eql(5);
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(1);
     expect(target2.metadata[0].key).to.be.eql("power");
@@ -224,49 +224,35 @@ describe("@inject decorator \n", () => {
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(0);
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(0);
   });
 
-
-
-
-
-
-
-
-
-
-
-
   it("It should generate metadata for named bindings \n", () => {
-
-
-
 
     var metadataKey = "inversify:inject";
     var paramsMetadata = Reflect.getMetadata(metadataKey, NamedWarrior);
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(1);
     expect(target1.metadata[0].key).to.be.eql("named");
     expect(target1.metadata[0].value).to.be.eql("strong");
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(1);
     expect(target2.metadata[0].key).to.be.eql("named");
@@ -301,16 +287,16 @@ describe("@inject decorator \n", () => {
     expect(paramsMetadata).to.be.instanceof(Array);
 
     var target1 : ITarget = paramsMetadata[0];
-    expect(target1.type).to.be.eql("IKatana");
-    expect(target1.name).to.be.eql("primary");
+    expect(target1.service.value()).to.be.eql("IKatana");
+    expect(target1.name.value()).to.be.eql("primary");
     expect(target1.metadata).to.be.instanceof(Array);
     expect(target1.metadata.length).to.be.eql(1);
     expect(target1.metadata[0].key).to.be.eql("power");
     expect(target1.metadata[0].value).to.be.eql(5);
 
     var target2 : ITarget = paramsMetadata[1];
-    expect(target2.type).to.be.eql("IShuriken");
-    expect(target2.name).to.be.eql("secondary");
+    expect(target2.service.value()).to.be.eql("IShuriken");
+    expect(target2.name.value()).to.be.eql("secondary");
     expect(target2.metadata).to.be.instanceof(Array);
     expect(target2.metadata.length).to.be.eql(1);
     expect(target2.metadata[0].key).to.be.eql("power");

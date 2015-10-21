@@ -1,30 +1,30 @@
 ///<reference path="../interfaces.d.ts" />
 
 import { activationUtils } from "./activation_utils";
+import { QueryableString } from "./queryable_string";
 
 class Request implements IRequest {
 
   public guid : string;
-  public injectedInto : string;
+  public index : number;
+  public injectedInto : IQueryableString;
+  public parentRequest : IRequest;
+  public childRequests : IRequest[];
   public context : IContext;
-  public targets : ITarget[];
+  public target : ITarget;
 
-  constructor(injectedInto : string, context : IContext, targets : ITarget[]) {
-    this.guid = activationUtils.guid();
-    this.context = context;
-    this.targets = [];
-  }
+  constructor(
+    context : IContext,
+    parentRequest? : Request,
+    injectedInto? :
+    string, target? : ITarget) {
 
-  public getParentRequest() {
-    this.context.getPreviousRequest(this.guid);
-  }
-
-  public getChildRequest() {
-    this.context.getNextRequest(this.guid);
-  }
-
-  public getIndex() {
-   this.context.getRequestIndex(this.guid);
+      this.guid = activationUtils.guid();
+      this.context = context;
+      this.childRequests = null;
+      this.parentRequest = parentRequest || null;
+      this.injectedInto = new QueryableString(injectedInto) || null;
+      this.target = target || null;
   }
 
 }

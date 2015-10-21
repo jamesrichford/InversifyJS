@@ -1,30 +1,23 @@
 ///<reference path="../interfaces.d.ts" />
 
 import { activationUtils } from "./activation_utils";
+import { Request } from "./request";
 
 class Context implements IContext {
 
+  public guid : string;
+  public depth : number;
   public kernel : IKernel;
-  private requests : IRequest[];
+  public rootRequest : IRequest;
 
   constructor(kernel : IKernel) {
     this.guid = activationUtils.guid();
     this.kernel = kernel;
-    this.requests = [];
+    this.rootRequest = null;
   }
 
-  public addRequest(IRequest request) {
-    // add reference, so context can be accessed from a request
-    request.context = this;
-    this.requests.push(request);
-  }
-
-  public getRequest(index : number) {
-    this.requests[i];
-  }
-
-  public getLength() {
-    this.requests.length;
+  public dispose() : void {
+    // clear requests graph
   }
 
 }

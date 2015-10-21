@@ -1,6 +1,7 @@
 ///<reference path="../interfaces.d.ts" />
 
 class Metadata implements IMetadata {
+  
   public key : string;
   public value : any;
 
