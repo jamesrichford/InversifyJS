@@ -14,8 +14,8 @@
     "mocha/mocha.d.ts": {
       "commit": "8f16b0fd1acd81a555b74f912da849dccc7c9a42"
     },
-    "bluebird/bluebird.d.ts": {
-      "commit": "bb051830df88f5a55dcf06b7fe85bf6b62cc97f2"
+    "q/Q.d.ts": {
+      "commit": "1fe12e478198ea551513ffff30b1452c6d6471a0"
     }
   }
 }

@@ -33,7 +33,7 @@
   "homepage": "http://inversify.io",
   "engines": {},
   "dependencies": {
-    "bluebird": "^2.9.34",
+    "q": "^1.4.1",
     "reflect-metadata": "^0.1.1"
   },
   "devDependencies": {
