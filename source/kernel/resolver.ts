@@ -4,7 +4,7 @@ import { BindingScopeEnum } from "../binding/binding_scope_enum";
 import { decoratorUtils } from "../decorators/decorator_utils";
 import { Target } from "../activation/target";
 
-class Resolver implements IBindingResolver {
+class Resolver implements IResolver {
 
   // Take a function as argument and discovers
   // the names of its arguments at run-time

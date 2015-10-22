@@ -10,14 +10,23 @@ class Context implements IContext {
   public kernel : IKernel;
   public rootRequest : IRequest;
 
+  // The context provides access to the kernel and the root node in the requests tree
   constructor(kernel : IKernel) {
     this.guid = activationUtils.guid();
     this.kernel = kernel;
+    this.depth = 0;
     this.rootRequest = null;
   }
 
-  public dispose() : void {
-    // clear requests graph
+  // Sets the root requests
+  public initialize(rootRequest : IRequest) {
+    this.rootRequest = rootRequest;
+  }
+
+  // Removes context/request and requests/child-request circular dependencies
+  public dispose() {
+    this.rootReques.dispose();
+    this.rootRequest = null;
   }
 
 }

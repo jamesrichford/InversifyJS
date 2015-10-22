@@ -17,24 +17,32 @@
 
 import { BindingScopeEnum } from "../binding/binding_scope_enum";
 import { Lookup } from "./lookup";
-import { Target } from "../activation/target";
+import { Context } from "../activation/context"
+import { Request } from "../activation/request";
+import { Target } from "../activation/request";
+import { Metadata } from "../activation/metadata";
+import { Planner } from "./planner";
 import { Resolver } from "./resolver";
 
 class Kernel implements IKernel {
 
-  private _resolver : IBindingResolver;
+  private _parentKernel : IKernel;
+  private _resolver : IResolver;
+  private _planner : IPlanner;
 
   // The objet properties are used as unique keys type
   // bindings are used as values
   private _bindingDictionary : ILookup<IBinding<any>>;
 
-  // The class default constructor
-  constructor() {
+  // Initialize the binding dictionary and resolver
+  constructor(parentKernel) {
+    this._parentKernel = parentKernel || null;
     this._bindingDictionary = new Lookup<IBinding<any>>();
+    this.planner = new Planner();
     this._resolver = new Resolver();
   }
 
-  // Regiters a type binding
+  // Registers a type binding
   public bind(typeBinding : IBinding<any>) : void {
     this._bindingDictionary.add(typeBinding.runtimeIdentifier, typeBinding);
   }
@@ -54,28 +62,45 @@ class Kernel implements IKernel {
     this._bindingDictionary = new Lookup<IBinding<any>>();
   }
 
-  // Resolves a dependency by its runtime-identifier
-  public resolve<TImplementationType>(runtimeIdentifier : string) : TImplementationType {
-    var target : ITarget = new Target(runtimeIdentifier, null, null);
-    return this._resolve<TImplementationType>(target);
+  private _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) {
+
+      // create context
+      var context = new Context(this);
+      var target : ITarget = null;
+
+      // add named/tagged metadata if defined
+      var tagValueIsDefined = typeof tagValue === "string";
+      if(typeof nameOrTag === "string" && tagValueIsDefined) {
+        target = new Target(null, new Metadata(nameOrTag, tagValue));
+      }
+      else {
+        if(tagValueIsDefined) throw new Error("Missing tag name!");
+        target = new Target(null, new Metadata("named", nameOrTag));
+      }
+      context.rootRequest = new Request(context, null, null, target);
+
+      // initialize request tree
+      var context = this.planner.getRequestTree(context.rootRequest);
+
+      return context;
   }
 
-  // Resolves named binding
-  public resolveNamed<TImplementationType>(runtimeIdentifier : string, named : string) : TImplementationType {
-    var target : ITarget = new Target(runtimeIdentifier, null, named);
-    return this._resolve<TImplementationType>(target);
+  public get<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : TImplementationType {
+      var context = _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string);
+      return this._resolver.resolve<TImplementationType>(runtimeIdentifier, context.rootRequest);
   }
 
-  // Resolves binding with metadata
-  public resolveWithMetadata<TImplementationType>(runtimeIdentifier : string, tagged : IMetadata) : TImplementationType {
-    var target : ITarget = new Target(runtimeIdentifier, null, tagged);
-    return this._resolve<TImplementationType>(target);
+  public getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Promise<TImplementationType> {
+    return new Promise<TImplementationType>(function(resolve, reject) {
+
+      var context = _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string);
+      this._resolver.resolveAsync<TImplementationType>(runtimeIdentifier, context.rootRequest)
+          .then(resolve)
+          .catch(reject);
+
+    });
   }
 
-  // Resolves a dependency by target
-  private _resolve<TImplementationType>(target : ITarget) : TImplementationType {
-    return this._resolver.get<TImplementationType>(this._bindingDictionary, target);
-  }
 }
 
 export { Kernel };

@@ -52,9 +52,8 @@ interface IKernel {
   bind(typeBinding : IBinding<any>) : void;
   unbind(runtimeIdentifier : string) : void;
   unbindAll() : void;
-  resolve<TImplementationType>(runtimeIdentifier : string) : TImplementationType;
-  resolveNamed<TImplementationType>(runtimeIdentifier : string, named : string) : TImplementationType;
-  resolveWithMetadata<TImplementationType>(runtimeIdentifier : string, tagged : IMetadata) : TImplementationType;
+  get<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : TImplementationType;
+  getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Promise<TImplementationType>;
 }
 
 interface IKeyValuePair<T> {
@@ -78,14 +77,21 @@ interface IContext {
   guid : string;
   kernel : IKernel;
   rootRequest : IRequest;
+  depth : number;
+  dispose() : void;
 }
 
 interface IRequest {
   guid : string;
-  index : number;
+  depth : number;
   injectedInto : IQueryableString;
+  parentRequest : IRequest;
+  childRequests : IRequest[];
   context : IContext;
   target : ITarget;
+  addChildRequest(target : ITarget, injectedInto : string);
+  isLeaf() : boolean;
+  dispose() : void;
 }
 
 interface ITarget {
@@ -103,7 +109,11 @@ interface IActivationUtils {
   guid() : string;
 }
 
-interface IBindingResolver {
+IPlanner {
+ getRequestTree(rootRequest : Request) : IRequest;
+}
+
+interface IResolver {
   hasDependencies(func : Function) : boolean;
   getMetadata(target) : Array<ITarget>;
 
@@ -113,7 +123,7 @@ interface IBindingResolver {
 
   construct<TImplementationType>(constr : { new(): TImplementationType ;}, args : Object[]) : TImplementationType;
 
-  get<TImplementationType>(bindingDictionary : ILookup<IBinding<any>>, target : ITarget) : TImplementationType;
+  resolve<TImplementationType>() : TImplementationType;
 }
 
 interface IDecoratorUtils {
