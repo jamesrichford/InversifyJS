@@ -16,41 +16,38 @@
 // with each service type (interfaces).
 
 import { BindingScopeEnum } from "../binding/binding_scope_enum";
-import { Lookup } from "./lookup";
 import { Context } from "../activation/context"
 import { Request } from "../activation/request";
-import { Target } from "../activation/request";
+import { Target } from "../activation/target";
 import { Metadata } from "../activation/metadata";
+import { Lookup } from "./lookup";
 import { Planner } from "./planner";
 import { Resolver } from "./resolver";
 
 class Kernel implements IKernel {
 
-  private _parentKernel : IKernel;
-  private _resolver : IResolver;
-  private _planner : IPlanner;
-
-  // The objet properties are used as unique keys type
-  // bindings are used as values
-  private _bindingDictionary : ILookup<IBinding<any>>;
+  public resolver : IResolver;
+  public planner : IPlanner;
+  public parentKernel : IKernel;
+  public bindingDictionary : ILookup<IBinding<any>>;
 
   // Initialize the binding dictionary and resolver
-  constructor(parentKernel) {
-    this._parentKernel = parentKernel || null;
-    this._bindingDictionary = new Lookup<IBinding<any>>();
+  constructor(parentKernel? : IKernel) {
+    this.bindingDictionary = new Lookup<IBinding<any>>();
+    this.parentKernel = parentKernel || null;
     this.planner = new Planner();
-    this._resolver = new Resolver();
+    this.resolver = new Resolver();
   }
 
   // Registers a type binding
   public bind(typeBinding : IBinding<any>) : void {
-    this._bindingDictionary.add(typeBinding.runtimeIdentifier, typeBinding);
+    this.bindingDictionary.add(typeBinding.runtimeIdentifier, typeBinding);
   }
 
   // Removes a type binding from the registry by its key
   public unbind(runtimeIdentifier : string) : void {
     try {
-      this._bindingDictionary.remove(runtimeIdentifier);
+      this.bindingDictionary.remove(runtimeIdentifier);
     }
     catch(e) {
       throw new Error(`Could not resolve service ${runtimeIdentifier}`);
@@ -59,45 +56,55 @@ class Kernel implements IKernel {
 
   // Removes all the type bindings from the registry
   public unbindAll() : void {
-    this._bindingDictionary = new Lookup<IBinding<any>>();
+    this.bindingDictionary = new Lookup<IBinding<any>>();
   }
 
-  private _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) {
+  private _createContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) {
 
       // create context
       var context = new Context(this);
       var target : ITarget = null;
 
       // add named/tagged metadata if defined
+      var tagNameIsDefined = typeof nameOrTag === "string";
       var tagValueIsDefined = typeof tagValue === "string";
-      if(typeof nameOrTag === "string" && tagValueIsDefined) {
-        target = new Target(null, new Metadata(nameOrTag, tagValue));
+
+      if(tagNameIsDefined && tagValueIsDefined) {
+
+        // named
+        target = new Target(null, runtimeIdentifier, new Metadata(nameOrTag, tagValue));
+      }
+      else if(tagNameIsDefined) {
+
+        // tagged
+        if(tagValueIsDefined) throw new Error("Missing tag value!");
+        target = new Target(null, runtimeIdentifier, new Metadata("named", tagValue));
       }
       else {
-        if(tagValueIsDefined) throw new Error("Missing tag name!");
-        target = new Target(null, new Metadata("named", nameOrTag));
+
+        // default
+        target = new Target(null, runtimeIdentifier, null);
       }
       context.rootRequest = new Request(context, null, null, target);
 
       // initialize request tree
-      var context = this.planner.getRequestTree(context.rootRequest);
+      context.rootRequest = this.planner.getRequestTree(context.rootRequest);
 
       return context;
   }
 
   public get<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : TImplementationType {
-      var context = _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string);
-      return this._resolver.resolve<TImplementationType>(runtimeIdentifier, context.rootRequest);
+      var context = this._createContext(runtimeIdentifier, nameOrTag , tagValue);
+      return this.resolver.resolve<TImplementationType>(context.rootRequest);
   }
 
-  public getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Promise<TImplementationType> {
-    return new Promise<TImplementationType>(function(resolve, reject) {
+  public getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Q.Promise<TImplementationType> {
 
-      var context = _initializeContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string);
-      this._resolver.resolveAsync<TImplementationType>(runtimeIdentifier, context.rootRequest)
-          .then(resolve)
-          .catch(reject);
-
+    return Q.Promise<TImplementationType>((resolve, reject) => {
+      var context = this._createContext(runtimeIdentifier, nameOrTag , tagValue);
+      this.resolver.resolveAsync<TImplementationType>(context.rootRequest)
+                    .then(resolve)
+                    .catch(reject);
     });
   }
 

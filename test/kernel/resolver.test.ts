@@ -1,6 +1,6 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Resolver } from "../source/kernel/resolver";
+import { Resolver } from "../../source/kernel/resolver";
 var expect = chai.expect;
 
 describe('Resolver Test Suite \n', () => {

@@ -22,8 +22,8 @@ class Resolver implements IResolver {
   // Examines if a constructor has any dependencies.
   // If so, it will resolve and inject them
   public injectDependencies<TImplementationType>(
-    bindingDictionary : ILookup<IBinding<any>>,
-    func : { new(): TImplementationType ;}) : TImplementationType {
+    func : { new(): TImplementationType ;}
+  ) : TImplementationType {
 
       // var args = this._getConstructorArguments(func);
 
@@ -32,66 +32,90 @@ class Resolver implements IResolver {
         return new func();
       }
       else {
-        var injections : Object[] = [], implementation = null;
+        var injections : Object[] = [];
         var metadata = this.getMetadata(func);
-        for(var i = 0; i < metadata.length; i++) {
-          implementation = this.get<any>(bindingDictionary, metadata[i]);
-          injections.push(implementation);
-        }
+        //for(var i = 0; i < metadata.length; i++) {
+        //  implementation = this.resolve<any>();
+        //  injections.push(implementation);
+        //}
         return this.construct<TImplementationType>(func, injections);
       }
   }
 
   // Creates instances of objects
   public construct<TImplementationType>(
-    constr : { new(): TImplementationType ;}, args : Object[]) : TImplementationType {
+    constr : { new(): TImplementationType ;}, args : Object[]
+  ) : TImplementationType {
 
       return new (Function.prototype.bind.apply(constr, [null].concat(args)));
   }
 
-  public get<TImplementationType>(bindingDictionary : ILookup<IBinding<any>>, target : ITarget) : TImplementationType {
-    var bindings : IBinding<TImplementationType>[];
+  public resolve<TImplementationType>(request : IRequest) : TImplementationType {
 
-    if(bindingDictionary.hasKey(target.service.value())) {
-      bindings = bindingDictionary.get(target.service.value());
-    }
-    else {
-      // no bindings available
-      return null;
-    }
+    // TODO
+    return null;
+  }
 
-    if(bindings.length > 0) {
-      if(target.isArray()) {
+  public resolveAsync<TImplementationType>(request : IRequest) : Q.Promise<TImplementationType> {
 
+    return Q.Promise<TImplementationType>((resolve, reject) => {
+      var bindings : IBinding<TImplementationType>[];
+      var bindingDictionary = request.context.kernel.bindingDictionary;
+
+      if(bindingDictionary.hasKey(request.target.service.value())) {
+        bindings = bindingDictionary.get(request.target.service.value());
       }
       else {
-        if(target.isNamed()) {
+        var parentKernel =request.context.kernel.parentKernel;
+        if(parentKernel !== null) {
+
+          // no bindings available but parent kernel is available
+          parentKernel.resolver.resolveAsync<TImplementationType>(request)
+                      .then(resolve)
+                      .catch(reject);
+        }
+        else {
+
+          // no bindings and no parent kernel are available
+          resolve(null);
+        }
+      }
+
+      if(bindings.length > 0) {
+        if(request.target.isArray()) {
 
         }
         else {
-          if(target.isTagged()) {
+          if(request.target.isNamed()) {
 
           }
           else {
+            if(request.target.isTagged()) {
 
+            }
+            else {
+
+            }
           }
         }
       }
-    }
-    else {
-      var binding = bindings[0];
-    }
+      else {
+        var binding = bindings[0];
+      }
 
-    // The type binding cache is used to store singleton instance
-    if((binding.scope === BindingScopeEnum.Singleton) && (binding.cache !== null)) {
-      return binding.cache;
-    }
-    else {
-      var result = this.injectDependencies<TImplementationType>(bindingDictionary, binding.implementationType);
-      binding.cache = result;
-      return result;
-    }
+      // The type binding cache is used to store singleton instance
+      if((binding.scope === BindingScopeEnum.Singleton) && (binding.cache !== null)) {
+        resolve(binding.cache);
+      }
+      else {
+        var result = this.injectDependencies<TImplementationType>(binding.implementationType);
+        binding.cache = result;
+        resolve(result);
+      }
+    });
+
   }
+
 }
 
 export { Resolver };

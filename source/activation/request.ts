@@ -43,7 +43,7 @@ class Request implements IRequest {
 
   // removes context/request and requests/child-request circular dependencies
   public dispose() {
-    for(var i = 0; i < this.childRequests; i++) {
+    for(var i = 0; i < this.childRequests.length; i++) {
       this.childRequests[i].dispose();
     }
     this.context = null;

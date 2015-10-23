@@ -1,8 +1,8 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Binding } from "../source/binding/binding";
-import { BindingScopeEnum } from "../source/binding/binding_scope_enum";
-import { BindingResultEnum } from "../source/binding/binding_result_enum";
+import { Binding } from "../../source/binding/binding";
+import { BindingScopeEnum } from "../../source/binding/binding_scope_enum";
+import { BindingResultEnum } from "../../source/binding/binding_result_enum";
 var expect = chai.expect;
 
 interface FooInterface {

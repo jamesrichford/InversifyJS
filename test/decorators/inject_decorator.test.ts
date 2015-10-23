@@ -1,12 +1,12 @@
 declare function __decorate(decorators, target, key?, desc?);
 declare function __param(paramIndex, decorator);
 
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { inject } from "../source/decorators/inject_decorator";
-import { named } from "../source/decorators/named_decorator";
-import { tagged } from "../source/decorators/tagged_decorator";
-import { decoratorUtils } from "../source/decorators/decorator_utils";
+import { inject } from "../../source/decorators/inject_decorator";
+import { named } from "../../source/decorators/named_decorator";
+import { tagged } from "../../source/decorators/tagged_decorator";
+import { decoratorUtils } from "../../source/decorators/decorator_utils";
 var expect = chai.expect;
 
 interface IWeapon {}

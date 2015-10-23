@@ -1,5 +1,5 @@
 /// <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts/" />
-///<reference path="../typings/bluebird/bluebird.d.ts" />
+///<reference path="../typings/q/q.d.ts" />
 
 interface IBinding<T> extends IBindingNamed<T>, IBindingWith<T>, IBindingWhen<T>, IBindingIn<T>, IBindingOn<T> {
   runtimeIdentifier : string;
@@ -49,11 +49,15 @@ interface IBindingOn<T> {
 }
 
 interface IKernel {
+  parentKernel : IKernel;
+  resolver : IResolver;
+  planner : IPlanner;
+  bindingDictionary : ILookup<IBinding<any>>;
   bind(typeBinding : IBinding<any>) : void;
   unbind(runtimeIdentifier : string) : void;
   unbindAll() : void;
   get<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : TImplementationType;
-  getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Promise<TImplementationType>;
+  getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Q.Promise<TImplementationType>;
 }
 
 interface IKeyValuePair<T> {
@@ -109,8 +113,8 @@ interface IActivationUtils {
   guid() : string;
 }
 
-IPlanner {
- getRequestTree(rootRequest : Request) : IRequest;
+interface IPlanner {
+  getRequestTree(rootRequest : IRequest) : IRequest;
 }
 
 interface IResolver {
@@ -118,12 +122,15 @@ interface IResolver {
   getMetadata(target) : Array<ITarget>;
 
   injectDependencies<TImplementationType>(
-    bindingDictionary : ILookup<IBinding<any>>,
-    func : { new(): TImplementationType; }) : TImplementationType
+    func : { new(): TImplementationType; }
+  ) : TImplementationType
 
-  construct<TImplementationType>(constr : { new(): TImplementationType ;}, args : Object[]) : TImplementationType;
+  construct<TImplementationType>(
+    constr : { new(): TImplementationType ;}, args : Object[]
+  ) : TImplementationType;
 
-  resolve<TImplementationType>() : TImplementationType;
+  resolve<TImplementationType>(request : IRequest) : TImplementationType;
+  resolveAsync<TImplementationType>(request : IRequest) : Q.Promise<TImplementationType>;
 }
 
 interface IDecoratorUtils {

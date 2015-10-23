@@ -1,6 +1,6 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Lookup } from "../source/kernel/lookup";
+import { Lookup } from "../../source/kernel/lookup";
 var expect = chai.expect;
 
 describe('Lookup Test Suite \n', () => {

@@ -1,7 +1,7 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Target } from "../source/activation/target";
-import { Metadata } from "../source/activation/metadata";
+import { Target } from "../../source/activation/target";
+import { Metadata } from "../../source/activation/metadata";
 var expect = chai.expect;
 
 describe("Target class \n", () => {

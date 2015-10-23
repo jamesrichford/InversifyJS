@@ -1,23 +1,20 @@
-// kernel
-import "./kernel.test";
-import "./lookup.test";
-import "./resolver.test";
 
-// decorators
-import "./inject_decorator.test";
-import "./named_decorator.test";
-import "./tagged_decorator.test";
+import "./activation/target.test";
+import "./activation/metadata.test";
+import "./activation/context.test";
+import "./activation/request.test";
+import "./activation/queryable_string.test";
+import "./activation/activation_utils.test";
 
-// binding
-import "./binding.test";
+import "./binding/binding.test";
 
-// activation
-import "./target.test";
-import "./metadata.test";
-import "./context.test";
-import "./request.test";
-import "./queryable_string.test";
-import "./activation_utils.test";
+import "./decorators/inject_decorator.test";
+import "./decorators/named_decorator.test";
+import "./decorators/tagged_decorator.test";
 
-// root
+import "./kernel/kernel.test";
+import "./kernel/lookup.test";
+import "./kernel/planner.test";
+import "./kernel/resolver.test";
+
 import "./inversify.test";

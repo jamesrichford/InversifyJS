@@ -25,7 +25,7 @@ class Context implements IContext {
 
   // Removes context/request and requests/child-request circular dependencies
   public dispose() {
-    this.rootReques.dispose();
+    this.rootRequest.dispose();
     this.rootRequest = null;
   }
 

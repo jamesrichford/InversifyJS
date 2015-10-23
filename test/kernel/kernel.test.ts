@@ -1,5 +1,9 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
+import { Kernel } from "../../source/kernel/kernel";
+import { Binding } from "../../source/binding/binding";
+import { BindingScopeEnum } from "../../source/binding/binding_scope_enum";
+var expect = chai.expect;
 declare var Map;
 
 // Polyfill for Function.prototype.bind more details at
@@ -31,11 +35,6 @@ if (!Function.prototype.bind) {
     return fBound;
   };
 }
-
-import { Kernel } from "../source/kernel/kernel";
-import { Binding } from "../source/binding/binding";
-import { BindingScopeEnum } from "../source/binding/binding_scope_enum";
-var expect = chai.expect;
 
 interface FooInterface {
   name : string;
@@ -93,7 +92,7 @@ describe('Kernel Test Suite \n', () => {
     var runtimeIdentifier = "FooInterface";
     var binding =  new Binding<FooInterface>(runtimeIdentifier).to(Foo);
     kernel.bind(binding);
-    var result = kernel.resolve<FooInterface>(runtimeIdentifier);
+    var result = kernel.get<FooInterface>(runtimeIdentifier);
     expect(expected.name).to.equals(result.name);
     expect(expected.greet()).to.equals(result.greet());
   });
@@ -112,9 +111,9 @@ describe('Kernel Test Suite \n', () => {
     kernel.bind(barBinding);
     kernel.bind(fooBarBinding);
 
-    var fooResult = kernel.resolve<FooInterface>(fooRuntimeIdentifier);
-    var barResult = kernel.resolve<BarInterface>(barRuntimeIdentifier);
-    var fooBarresult = kernel.resolve<FooBarInterface>(fooBarRuntimeIdentifier);
+    var fooResult = kernel.get<FooInterface>(fooRuntimeIdentifier);
+    var barResult = kernel.get<BarInterface>(barRuntimeIdentifier);
+    var fooBarresult = kernel.get<FooBarInterface>(fooBarRuntimeIdentifier);
 
     expect(fooBarresult.foo).to.not.be.null;
     expect(fooBarresult.bar).to.not.be.null;
@@ -129,8 +128,8 @@ describe('Kernel Test Suite \n', () => {
     var barBinding =  new Binding<BarInterface>(barRuntimeIdentifier).to(Bar);
     kernel.bind(barBinding);
 
-    var foo = kernel.resolve(fooRuntimeIdentifier);
-    var bar = kernel.resolve(barRuntimeIdentifier);
+    var foo = kernel.get(fooRuntimeIdentifier);
+    var bar = kernel.get(barRuntimeIdentifier);
     expect(foo).to.be.null;
     expect(bar).to.not.be.null;
   });
@@ -143,11 +142,11 @@ describe('Kernel Test Suite \n', () => {
     var binding =  new Binding<FooInterface>(runtimeIdentifier).to(Foo).inSingletonScope();
     kernel.bind(binding);
 
-    var expected = kernel.resolve<FooInterface>(runtimeIdentifier);
+    var expected = kernel.get<FooInterface>(runtimeIdentifier);
     expected.name = "new name";
 
     // Because is a singleton expected.name should equal result.name
-    var result = kernel.resolve<FooInterface>(runtimeIdentifier);
+    var result = kernel.get<FooInterface>(runtimeIdentifier);
 
     expect(expected.name).to.equals(result.name);
     expect(expected.greet()).to.equals(result.greet());
@@ -163,14 +162,14 @@ describe('Kernel Test Suite \n', () => {
     kernel.bind(fooBinding);
     kernel.bind(barBinding);
 
-    var foo = kernel.resolve(fooRuntimeIdentifier);
-    var bar = kernel.resolve(barRuntimeIdentifier);
+    var foo = kernel.get(fooRuntimeIdentifier);
+    var bar = kernel.get(barRuntimeIdentifier);
     expect(foo).to.not.be.null;
     expect(bar).to.not.be.null;
 
     kernel.unbind(fooRuntimeIdentifier);
-    var foo = kernel.resolve(fooRuntimeIdentifier);
-    var bar = kernel.resolve(barRuntimeIdentifier);
+    var foo = kernel.get(fooRuntimeIdentifier);
+    var bar = kernel.get(barRuntimeIdentifier);
     expect(foo).to.be.null;
     expect(bar).to.not.be.null;
   });
@@ -187,8 +186,8 @@ describe('Kernel Test Suite \n', () => {
 
     kernel.unbindAll();
 
-    var foo = kernel.resolve(fooRuntimeIdentifier);
-    var bar = kernel.resolve(barRuntimeIdentifier);
+    var foo = kernel.get(fooRuntimeIdentifier);
+    var bar = kernel.get(barRuntimeIdentifier);
     expect(foo).to.be.null;
     expect(bar).to.be.null;
   });

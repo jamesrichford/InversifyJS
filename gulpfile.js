@@ -81,7 +81,7 @@ var tsTestProject = tsc.createProject({
 });
 
 gulp.task("build-test", function() {
-  return gulp.src("test/*.test.ts")
+  return gulp.src("test/**/*.test.ts")
              .pipe(tsc(tsTestProject))
              .js.pipe(gulp.dest("build/test/"));
 });

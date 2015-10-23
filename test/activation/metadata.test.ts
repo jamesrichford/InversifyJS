@@ -1,6 +1,6 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Metadata } from "../source/activation/metadata";
+import { Metadata } from "../../source/activation/metadata";
 var expect = chai.expect;
 
 describe("Metadta class \n", () => {

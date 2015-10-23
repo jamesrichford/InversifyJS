@@ -1,6 +1,6 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { activationUtils } from "../source/activation/activation_utils";
+import { activationUtils } from "../../source/activation/activation_utils";
 var expect = chai.expect;
 
 describe("ActivationUtils class \n", () => {

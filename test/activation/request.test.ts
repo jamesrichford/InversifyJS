@@ -1,6 +1,9 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Request } from "../source/activation/request";
+import { Kernel } from "../../source/kernel/kernel";
+import { Context } from "../../source/activation/context";
+import { Request } from "../../source/activation/request";
+import { activationUtils } from "../../source/activation/activation_utils";
 var expect = chai.expect;
 
 describe('Request Test Suite \n', () => {
@@ -10,12 +13,13 @@ describe('Request Test Suite \n', () => {
     var context =  new Context(kernel);
     var request = new Request(context);
 
-    this.guid = activationUtils.guid();
-    this.context = context;
-    this.childRequests = null;
-    this.parentRequest = parentRequest || null;
-    this.injectedInto = new QueryableString(injectedInto) || null;
-    this.target = target || null;
+    // TODO
+    //this.guid = activationUtils.guid();
+    //this.context = context;
+    //this.childRequests = null;
+    //this.parentRequest = parentRequest || null;
+    //this.injectedInto = new QueryableString(injectedInto) || null;
+    //this.target = target || null;
   });
 
   it('It should be able to add child requests \n', () => {

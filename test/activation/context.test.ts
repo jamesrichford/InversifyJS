@@ -1,8 +1,8 @@
-///<reference path="../typings/tsd.d.ts" />
+///<reference path="../../typings/tsd.d.ts" />
 
-import { Kernel } from "../source/kernel/kernel";
-import { Context } from "../source/activation/context";
-import { Request } from "../source/activation/request";
+import { Kernel } from "../../source/kernel/kernel";
+import { Context } from "../../source/activation/context";
+import { Request } from "../../source/activation/request";
 var expect = chai.expect;
 
 describe('Context Test Suite \n', () => {
