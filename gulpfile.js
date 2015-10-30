@@ -59,7 +59,7 @@ var tsProject = tsc.createProject({
 
 var config = {
     app: {
-        path: __dirname + '/source',
+        path: 'source',
         main: 'inversify.ts',
         result: 'inversify.js'
     }
@@ -121,7 +121,7 @@ gulp.task("bundle-test", function () {
 //******************************************************************************
 gulp.task("karma", function(cb) {
   new Server({
-      configFile: __dirname + '/karma.conf.js'
+      configFile: 'karma.conf.js'
     }, cb).start();
 });
 

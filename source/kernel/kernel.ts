@@ -21,13 +21,11 @@ import { Request } from "../activation/request";
 import { Target } from "../activation/target";
 import { Metadata } from "../activation/metadata";
 import { Lookup } from "./lookup";
-import { Planner } from "./planner";
 import { Resolver } from "./resolver";
 
 class Kernel implements IKernel {
 
   public resolver : IResolver;
-  public planner : IPlanner;
   public parentKernel : IKernel;
   public bindingDictionary : ILookup<IBinding<any>>;
 
@@ -35,7 +33,6 @@ class Kernel implements IKernel {
   constructor(parentKernel? : IKernel) {
     this.bindingDictionary = new Lookup<IBinding<any>>();
     this.parentKernel = parentKernel || null;
-    this.planner = new Planner();
     this.resolver = new Resolver();
   }
 
@@ -59,53 +56,48 @@ class Kernel implements IKernel {
     this.bindingDictionary = new Lookup<IBinding<any>>();
   }
 
-  private _createContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) {
-
-      // create context
-      var context = new Context(this);
-      var target : ITarget = null;
-
-      // add named/tagged metadata if defined
-      var tagNameIsDefined = typeof nameOrTag === "string";
-      var tagValueIsDefined = typeof tagValue === "string";
-
-      if(tagNameIsDefined && tagValueIsDefined) {
-
-        // named
-        target = new Target(null, runtimeIdentifier, new Metadata(nameOrTag, tagValue));
-      }
-      else if(tagNameIsDefined) {
-
-        // tagged
-        if(tagValueIsDefined) throw new Error("Missing tag value!");
-        target = new Target(null, runtimeIdentifier, new Metadata("named", tagValue));
-      }
-      else {
-
-        // default
-        target = new Target(null, runtimeIdentifier, null);
-      }
-      context.rootRequest = new Request(context, null, null, target);
-
-      // initialize request tree
-      context.rootRequest = this.planner.getRequestTree(context.rootRequest);
-
-      return context;
-  }
-
   public get<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : TImplementationType {
-      var context = this._createContext(runtimeIdentifier, nameOrTag , tagValue);
-      return this.resolver.resolve<TImplementationType>(context.rootRequest);
+    var context = this._createContext(runtimeIdentifier, nameOrTag , tagValue);
+    return this.resolver.resolve<TImplementationType>(context.rootRequest);
   }
 
   public getAsync<TImplementationType>(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) : Q.Promise<TImplementationType> {
 
     return Q.Promise<TImplementationType>((resolve, reject) => {
       var context = this._createContext(runtimeIdentifier, nameOrTag , tagValue);
-      this.resolver.resolveAsync<TImplementationType>(context.rootRequest)
-                    .then(resolve)
-                    .catch(reject);
+      return this.resolver.resolveAsync<TImplementationType>(context.rootRequest);
     });
+  }
+
+  private _createContext(runtimeIdentifier : string, nameOrTag? : string, tagValue? : string) {
+
+    // create context
+    var context = new Context(this);
+    var target : ITarget = null;
+
+    // add named/tagged metadata if defined
+    var tagNameIsDefined = typeof nameOrTag === "string";
+    var tagValueIsDefined = typeof tagValue === "string";
+
+    if(tagNameIsDefined && tagValueIsDefined) {
+
+      // named
+      target = new Target(null, runtimeIdentifier, new Metadata(nameOrTag, tagValue));
+    }
+    else if(tagNameIsDefined) {
+
+      // tagged
+      if(tagValueIsDefined) throw new Error("Missing tag value!");
+      target = new Target(null, runtimeIdentifier, new Metadata("named", tagValue));
+    }
+    else {
+
+      // default
+      target = new Target(null, runtimeIdentifier, null);
+    }
+    context.rootRequest = new Request(context, null, null, target);
+
+    return context;
   }
 
 }

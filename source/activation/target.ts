@@ -1,4 +1,4 @@
-///<reference path="../interfaces.d.ts" />
+///<reference path="../interfaces/interfaces.d.ts" />
 
 import { Metadata } from "./metadata";
 import { QueryableString } from "./queryable_string";

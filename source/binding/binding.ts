@@ -1,4 +1,4 @@
-///<reference path="../interfaces.d.ts" />
+///<reference path="../interfaces/interfaces.d.ts" />
 
 // TypeBinding
 // -----------
@@ -76,6 +76,7 @@ class Binding<T> implements IBinding<T> {
     // Indicates that the service should be bound to an instance of the specified provider type.
     // The instance will be activated via the kernel when an instance of the service is activated.
     public toFactory(implementationType : { new(...args : any[]): T ;}) : IBinding<T> {
+      // TODO pass context to callback ctx => ctx.kernel.get("service")
       this.implementationType = implementationType;
       this.resolveAs = BindingResultEnum.Factory;
       return this;
@@ -105,18 +106,6 @@ class Binding<T> implements IBinding<T> {
 
     // Indicates that the specified constructor argument should be overridden with the specified value.
     public withConstructorArgument(name : string, value : any) : IBinding<T> {
-      // todo
-      return this;
-    }
-
-    //  Indicates that the specified property should be injected with the specified value.
-    public withPropertyValue(name : string, value : any) : IBinding<T> {
-      // todo
-      return this;
-    }
-
-    // Adds a custom parameter to the binding.
-    public withParameter() {
       // todo
       return this;
     }

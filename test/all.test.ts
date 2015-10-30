@@ -14,7 +14,6 @@ import "./decorators/tagged_decorator.test";
 
 import "./kernel/kernel.test";
 import "./kernel/lookup.test";
-import "./kernel/planner.test";
 import "./kernel/resolver.test";
 
 import "./inversify.test";

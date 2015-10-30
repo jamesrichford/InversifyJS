@@ -1,4 +1,4 @@
-///<reference path="../interfaces.d.ts" />
+///<reference path="../interfaces/interfaces.d.ts" />
 
 import { Target } from "../activation/target";
 import { decoratorUtils } from "./decorator_utils";
@@ -7,6 +7,7 @@ import { decoratorUtils } from "./decorator_utils";
 // TODO: remove args when interfaze serialization support arrives
 function inject(...paramTypes : string[]) {
   return function(target: any) {
+
     var metadataKey = "inversify:inject";
     var metadataValue = new Array<ITarget>();
     var paramNames = decoratorUtils.getParanNames(target);
