@@ -1,4 +1,4 @@
-import { Kernel, Binding, inject, named } from "../source/inversify";
+import { Kernel, Binding, inject } from "../source/inversify";
 
 // interfaces
 
@@ -58,5 +58,11 @@ kernel.bind(new Binding<IShuriken>(IShuriken).to(Shuriken));
 // composition root
 
 var soldier = Kernel.resolve<ISoldier>(ISoldier);
-soldier.primaryWeapon.tryHit(5);     // false
-soldier.secondaryWeapon.tryThrow(5); // true
+var distance = 5;
+
+var primaryResult = soldier.primaryWeapon.tryHit(distance) ? "successful" : "unsuccessful";
+var secondaryResult = soldier.secondaryWeapon.tryThrow(distance) ? "successful" : "unsuccessful";
+
+// Used by e2e tests assertions
+document.body.innerHTML = document.body.innerHTML + `<p id="basic_injection_ts_result_1">A soldier tried to use primary weapon from a distance {distance}m of and was {primaryResult}<p>`;
+document.body.innerHTML = document.body.innerHTML + `<p id="basic_injection_ts_result_2">A soldier tried to use primary weapon from a distance {distance}m of and was {secondaryResult}<p>`;

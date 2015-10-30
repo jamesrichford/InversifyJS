@@ -74,28 +74,20 @@ class Resolver implements IResolver {
       var bindings : IBinding<TImplementationType>[];
       var matchingBindings : IBinding<TImplementationType>[];
 
-      bindings = this.getBindigns(request);
+      bindings = this.getBindigns(request.context.kernel, );
+      bindings = filterBindings(bindings, request);
+
 
       if(bindings.length > 0) {
         if(request.target.isArray()) {
           //var bindings.map(b => { return this.injectDependencies(b.implementationType); })
         }
         else {
-          if(request.target.isNamed()) {
-            // try to math named binding
-          }
-          else {
-            if(request.target.isTagged()) {
-
-            }
-            else {
-
-            }
-          }
+          // error
         }
       }
       else {
-        async ? Q.when(null) : null;
+        // resolve 1
       }
 
   }

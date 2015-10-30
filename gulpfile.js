@@ -48,14 +48,7 @@ gulp.task("document", function () {
 //******************************************************************************
 //* BUILD
 //******************************************************************************
-var tsProject = tsc.createProject({
-  removeComments : true,
-  noImplicitAny : false,
-  target : "ES5",
-  module : "commonjs",
-  declarationFiles : false,
-  experimentalDecorators : true
-});
+var tsProject = tsc.createProject("tsconfig.json");
 
 var config = {
     app: {
@@ -71,14 +64,7 @@ gulp.task("build-source", function() {
              .js.pipe(gulp.dest("build/source/"));
 });
 
-var tsTestProject = tsc.createProject({
-  removeComments : true,
-  noImplicitAny : false,
-  target : "ES5",
-  module : "commonjs",
-  declarationFiles : false,
-  experimentalDecorators : true
-});
+var tsTestProject = tsc.createProject("tsconfig.json");
 
 gulp.task("build-test", function() {
   return gulp.src("test/**/*.test.ts")
