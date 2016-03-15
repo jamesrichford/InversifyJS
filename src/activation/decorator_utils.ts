@@ -42,7 +42,7 @@ function _decorate(decorators: ClassDecorator[], target: Function) {
 }
 
 function _param(paramIndex: number, decorator: ParameterDecorator): ClassDecorator {
-    return function (target: Object, key: string | symbol) { decorator(target, key, paramIndex); };
+    return function (target: Object) { decorator(target, null, paramIndex); };
 }
 
 // Allows VanillaJS developers to use decorators:
@@ -58,7 +58,7 @@ function decorate(
     if (typeof parameterIndex === "number") {
         _decorate([_param(parameterIndex, decorator)], target);
     } else {
-        _decorate([decorator], target);
+        _decorate([<ClassDecorator>decorator], target);
     }
 }
 
