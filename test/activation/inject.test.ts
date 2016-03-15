@@ -6,6 +6,8 @@ import * as METADATA_KEY from "../../src/constants/metadata_keys";
 import * as ERRORS_MSGS from "../../src/constants/error_msgs";
 import * as Stubs from "../utils/stubs";
 
+interface IWeapon {};
+
 describe("@inject", () => {
 
     let WarriotWithoutInjections = Stubs.WarriotWithoutInjections;
@@ -41,7 +43,7 @@ describe("@inject", () => {
     it("Should be usable in VanillaJS applications", () => {
 
         let VanillaJSWarrior = (function () {
-            function VanillaJSWarrior(primary, secondary) {
+            function VanillaJSWarrior(primary: IWeapon, secondary: IWeapon) {
                 // ...
             }
             return VanillaJSWarrior;

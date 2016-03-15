@@ -1,4 +1,5 @@
 ///<reference path="./interfaces/interfaces.d.ts" />
+///<reference path="../node_modules/reflect-metadata/typings.d.ts" />
 
 // Inversify
 // ---------

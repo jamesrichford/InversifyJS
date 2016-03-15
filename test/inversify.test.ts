@@ -17,7 +17,7 @@ describe("InversifyJS", () => {
       }
 
       interface IShuriken {
-          throw();
+          throw(): string;
       }
 
       class Katana implements IKatana {

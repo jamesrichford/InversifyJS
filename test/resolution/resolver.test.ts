@@ -93,9 +93,9 @@ describe("Resolver", () => {
       let planner = new Planner();
       let context = planner.createContext(kernel);
 
-      /* 
+      /*
       *  Plan (request tree):
-      *  
+      *
       *  Ninja (target "null", no metadata)
       *   -- Katana (target "katama", no metadata)
       *       -- KatanaHandler (target "blade", no metadata)
@@ -187,9 +187,9 @@ describe("Resolver", () => {
       let planner = new Planner();
       let context = planner.createContext(kernel);
 
-      /* 
+      /*
       *  Plan (request tree):
-      *  
+      *
       *  Ninja (target "null", no metadata)
       *   -- Katana (target "katama", no metadata)
       *       -- KatanaHandler (target "blade", no metadata)
@@ -335,9 +335,9 @@ describe("Resolver", () => {
       let planner = new Planner();
       let context = planner.createContext(kernel);
 
-      /* 
+      /*
       *  Plan (request tree):
-      *  
+      *
       *  Ninja (target "null", no metadata)
       *   -- Katana (target "katama", no metadata)
       *   -- Shuriken (target "shuriken", no metadata)
@@ -958,13 +958,13 @@ describe("Resolver", () => {
         let kernel = new Kernel();
         kernel.bind<INinja>(ninjaId).to(Ninja);
 
-        // This is a global for unit testing but remember 
+        // This is a global for unit testing but remember
         // that it is not a good idea to use globals
-        let timeTracker = [];
+        let timeTracker: string[] = [];
 
         kernel.bind<IKatana>(katanaId).to(Katana).proxy((ninja) => {
             // BLOCK http://stackoverflow.com/questions/35906938/how-to-enable-harmony-proxies-in-gulp-mocha
-            /* 
+            /*
             let handler = {
                 apply: function(target, thisArgument, argumentsList) {
                     timeTracker.push(`Starting ${target.name} ${performance.now()}`);

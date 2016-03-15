@@ -37,12 +37,12 @@ function tagParameter(target: any, targetKey: string, index: number, metadata: I
     return target;
 }
 
-function _decorate(decorators, target) {
+function _decorate(decorators: ClassDecorator[], target: Function) {
     Reflect.decorate(decorators, target);
 }
 
-function _param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); };
+function _param(paramIndex: number, decorator: ParameterDecorator): ClassDecorator {
+    return function (target: Object, key: string | symbol) { decorator(target, key, paramIndex); };
 }
 
 // Allows VanillaJS developers to use decorators:

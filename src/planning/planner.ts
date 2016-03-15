@@ -50,7 +50,7 @@ class Planner implements IPlanner {
         try {
 
             let bindings = this.getBindings<any>(parentRequest.parentContext.kernel, target.service.value());
-            let activeBindings = [];
+            let activeBindings: IBinding<any>[] = [];
 
             if (bindings.length > 1 && target.isArray() === false) {
 
@@ -85,8 +85,8 @@ class Planner implements IPlanner {
 
             } else {
 
-                // one ore more than one matching bindings found 
-                // when more than 1 matching bindings found target is an array 
+                // one ore more than one matching bindings found
+                // when more than 1 matching bindings found target is an array
                 this._createChildRequest(parentRequest, target, activeBindings);
 
             }
@@ -151,7 +151,7 @@ class Planner implements IPlanner {
         let paramNames = Reflect.getMetadata(METADATA_KEY.PARAM_NAMES, func) || [];
         let tags = Reflect.getMetadata(METADATA_KEY.TAGGED, func) || [];
 
-        let targets = injections.map((inject, index) => {
+        let targets = injections.map((inject: string, index: number) => {
             let targetName = paramNames[index];
             let target = new Target(targetName, inject);
             target.metadata = tags[index.toString()] || [];

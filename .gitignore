@@ -52,3 +52,6 @@ src/syntax/*.d.ts
 test/*.js
 test/**/*.js
 type_definitions/**/*.js
+
+# Documentation
+documentation
